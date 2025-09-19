@@ -7,10 +7,10 @@ import json
 import datetime
 import sys
 import getopt
-from http.server import HTTPServer, BaseHTTPRequestHandler
+import socketserver
+from http.server import SimpleHTTPRequestHandler
 
-
-class TimeHandler(BaseHTTPRequestHandler):
+class TimeHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         clientIP = self.client_address[0]
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -57,13 +57,14 @@ def main(argv):
         sys.exit(1)
 
     print(f'se inicia el servidor web: {ip}:{port}')
-    server = HTTPServer((ip, port), TimeHandler)
+    server = socketserver.TCPServer((ip, port), TimeHandler)
+    server.allow_reuse_address = True
+
     try:
         server.serve_forever()
     except:
         print('servidor apagado')
         server.server_close()
-
 
 if __name__ == '__main__':
     main(sys.argv[1:])
