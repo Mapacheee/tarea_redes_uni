@@ -1,6 +1,6 @@
 """
 Integrantes:
-Estudiante 1: Jason Momoa 21731420-8
+Estudiante 1: Jason Monrroy 21731420-8
 Estudiante 2: Benjamin Isasmendi 21624244-0
 """
 import json
