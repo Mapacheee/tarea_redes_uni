@@ -24,7 +24,7 @@ class TimeHandler(SimpleHTTPRequestHandler):
             self.send_header('Content-Length', str(len(payload.encode())))
             self.end_headers()
             self.wfile.write(payload.encode())
-
+            
             print(f'[{timestamp}] {clientIP} "GET /hora HTTP/1.1" 200')
 
         else:
@@ -47,7 +47,7 @@ def main(argv):
             try:
                 port = int(val)
             except:
-                print('el puerto debe ser un numero')
+                print('el puerto debe ser un número')
                 sys.exit(1)
 
     if ip is None or port is None:
@@ -56,9 +56,8 @@ def main(argv):
               "ejemplo: ./servidor_hora -i 127.0.0.1 -p 8080")
         sys.exit(1)
 
-    print(f'se inicia el servidor web: {ip}:{port}')
+    print(f'se inicia el servidor en: {ip}:{port}')
     server = socketserver.TCPServer((ip, port), TimeHandler)
-    server.allow_reuse_address = True
 
     try:
         server.serve_forever()
