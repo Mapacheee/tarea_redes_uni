@@ -16,8 +16,8 @@ class TimeHandler(SimpleHTTPRequestHandler):
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         if self.path == '/hora':
-            hora_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            payload = json.dumps({'hora': hora_str})
+            hour_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            payload = json.dumps({'hora': hour_str})
 
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
