@@ -123,11 +123,13 @@
         //
         //AQUI VA SU CODIGO
         //
+        IPbase10 = 0;
 
         for (var i = 0; IPv4Bytes.length > i; i++) {
             IPbase10 = IPbase10 + (parseInt(IPv4Bytes[i]) << 8 * (IPv4Bytes.length - (i + 1)));
         }
 
+        IPbase10 = IPbase10.toString();
         //
         // FIN DE SU CODIGO
         //
@@ -143,7 +145,7 @@
         //AQUI VA SU CODIGO
         //
         
-        var ipNumero = getIPbase10(IPv4);
+        var ipNumero = parseInt(getIPbase10(IPv4));
         var mascara = -1 << (32 - bitsMascara);
         var netIdNumero = ipNumero & mascara;
 
@@ -152,7 +154,7 @@
             NetID.unshift(numeroDecimal);
         }
         
-        NetID.join('.');
+        NetID = NetID.join('.');
         
         //
         // FIN DE SU CODIGO
@@ -190,7 +192,7 @@
         //AQUI VA SU CODIGO
         //
         
-        var ipNumero = getIPbase10(IPv4);
+        var ipNumero = parseInt(getIPbase10(IPv4));
         var mascara = -1 << (32 - bitsMascara);
         var netIdNumero = ipNumero & mascara;
         var broadcastNumero = netIdNumero | (~mascara);
@@ -216,7 +218,7 @@
         //
         //AQUI VA SU CODIGO
         //
-        var ipNumero = getIPbase10(IPv4);
+        var ipNumero = parseInt(getIPbase10(IPv4));
         var mascaraDeRed = -1 << (32 - bitsMascara);
         var netIdNumero = ipNumero & mascaraDeRed;
 
