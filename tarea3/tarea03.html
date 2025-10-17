@@ -175,7 +175,8 @@
         if (IPv4[0] <= 127) { Clase = "A"; }
         else if (128 <= IPv4[0] && IPv4[0] <= 191) { Clase = "B"; }
         else if (192 <= IPv4[0] && IPv4[0] <= 223) { Clase = "C"; }
-        else { Clase = "D" }
+        else if (224 <= IPv4[0] && IPv4[0] <= 239) { Clase = "D"; }
+        else { Clase = "E"; }
         
         //
         // FIN DE SU CODIGO
