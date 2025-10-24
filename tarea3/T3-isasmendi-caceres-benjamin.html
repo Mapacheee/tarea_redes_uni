@@ -1,0 +1,341 @@
+<html>
+<head>
+<title>Calculo de Rango de IP</title>
+<script>
+
+    // Completar la sección de identificación de las y los
+    // integrantes del grupo
+    var INTEGRANTE1 = "Jason Monroy Albanez, jason.monroy@estudiantes.uv.cl";
+    var INTEGRANTE2 = "Benjamín Isasmendi Cáceres, benjamin.isasmendi@estudiantes.uv.cl";
+
+
+    //Funcion Principal
+    function calcular(formulario){
+        //ESTA FUNCION NO DEBE SER MODIFICADA
+        //SOLO IMPLEMENTE LAS FUNCIONES INDICADAS EN EL CODIGO
+        //LEA ESTE PROGRAMA, ENTIENDA SU LOGICA Y SU RELACION
+        //CON LA MATERIA PASADA EN CLASES.
+        
+        //Datos de entrada del formulario
+            var IPv4 = formulario.IPv4.value; //IP en la forma O1.O2.O3.O4
+            var bitsMascara = parseInt(formulario.bitsMascara.value);
+            
+        //Validar simple. Solo comprueba que los datos no estén vacios
+            if ( (IPv4 == "") || (bitsMascara == "")  ){
+                alert("Falta un campo");
+                return(false);
+            }
+
+        //Algunas funciones utiles
+        //Puede modificar esta parte para probar las funcionalidades que se nombran
+      
+        //Para debug (en vez de usar alert. La consola se muestra en el navegador
+        console.log("IPv4:"+IPv4);
+        console.log("Mascara:"+bitsMascara);
+        
+        //Convertir un entero a binario
+        var numBase10 = 127;
+        console.log("127 entero (base10) en base2:"+ numBase10.toString(2));
+        
+        //Convertir un string que tiene un valor entero a binario
+        var numBase10str = "127";
+        console.log("127 string (base10) en base2:"+ parseInt(numBase10str).toString(2));
+        
+        //Convertir un string binario a decimal
+        var binario = "11111111";
+        console.log("Binario " + binario + " en base 10: " + parseInt(binario,2) );
+        
+        //Rellenar con ceros a la derecha un string
+        var binario = "111";
+        console.log("Rellenar a la derecha con ceros el nro " + binario + " para que tengo 8 digitos: "+ binario.rellenarDerecha('0',8) );
+
+
+        //Rellenar con ceros a la izquierda un string
+        var binario = "111";
+        console.log("Rellenar a la izquierda con ceros el nro " + binario + " para que tengo 8 digitos: "+ binario.rellenarIzquierda('0',8) );
+
+
+        //FIN EJEMPLOS DE FUNCIONES UTILES
+
+        //Logica del programa
+        //NO MODIFIQUE ESTA SECCION!!!!
+        //DEBE IMPLEMENTAR LAS FUNCIONES INDICADAS
+
+        //Las funciones deben ser implementadas con operaciones al bit
+        //y ser lo más compactas posibles, desde el punto de vista del
+        //código.
+        
+        
+        //#######PARTE 1########
+        //Determina el numero IP en base 10
+        //en el formulario.
+        //Funcion a implementar: "getIPbase10"
+            formulario.IPbase10.value = getIPbase10(IPv4);
+        
+        //#######FIN PARTE 1########
+        
+
+        //#######PARTE 2########
+        //Determina el nombre de red a partir del nro IP y la mascara
+        //Funcion a implementar: "getNetID"
+            formulario.NetID.value = getNetID(IPv4, bitsMascara);
+        
+        //#######FIN PARTE 2########
+  
+        //#######PARTE 3########
+        //Determina la clase a partir del nro IP 
+        //Funcion a implementar: "getClase"
+            formulario.Clase.value = getClase(IPv4);
+        
+        //#######FIN PARTE 3########
+
+        
+        //#######PARTE 4########
+        //Determina el rango de IP, dada el numero IP y la mascara
+        ////Funcion a implementar: "getRangoIP".
+            formulario.IPmin.value = getRangoIP(IPv4, bitsMascara)[0];
+            formulario.IPmax.value = getRangoIP(IPv4, bitsMascara)[1];
+        
+        //#######FIN PARTE 4########
+        
+        //#######PARTE 5########
+        //Determina la direccion de broadcast, dado el numero IP y la mascara
+        //Funcion a implementar: getIPbroadcast
+            formulario.IPbroadcast.value = getIPbroadcast(IPv4, bitsMascara);
+            
+        //#######PARTE 6########
+        //Determina la direccion de broadcast, dado el numero IP y la mascara
+        //Funcion a implementar: getMascaraOctal
+        formulario.MascaraOctal.value = getMascaraOctal(bitsMascara);
+        
+        
+        
+    }
+
+    //#######PARTE 1########
+    function getIPbase10(IPv4){
+
+        var IPbase10; //String que representa la representacion interna de numBase10
+
+        var IPv4Bytes = new Array(4);
+        IPv4Bytes = IPv4.split('.'); //Los bytes de la dirección IP quedan en IPv4Bytes[i], con i={0,1,2,3}
+
+        //
+        //AQUI VA SU CODIGO
+        //
+        IPbase10 = 0;
+
+        for (var i = 0; IPv4Bytes.length > i; i++) {
+            IPbase10 = IPbase10 + (parseInt(IPv4Bytes[i]) << 8 * (IPv4Bytes.length - (i + 1)));
+        }
+
+        IPbase10 = IPbase10.toString();
+        //
+        // FIN DE SU CODIGO
+        //
+
+        return(IPbase10);
+    }
+
+    //#######PARTE 2########
+    function getNetID(IPv4, bitsMascara){
+        var NetID = [];
+        
+        //
+        //AQUI VA SU CODIGO
+        //
+
+        var ipNumero = parseInt(getIPbase10(IPv4));
+        var mascara = -1 << (32 - bitsMascara);
+        var netIdNumero = ipNumero & mascara;
+
+        NetID = numeroAStringIP(netIdNumero);
+        
+        //
+        // FIN DE SU CODIGO
+        //
+    
+        return(NetID);
+    }
+
+    //#######PARTE 3########
+    function getClase(IPv4){
+        var Clase;
+        
+        //
+        //AQUI VA SU CODIGO
+        //
+        IPv4 = IPv4.split(".")
+
+        if (IPv4[0] <= 127) { Clase = "A"; }
+        else if (128 <= IPv4[0] && IPv4[0] <= 191) { Clase = "B"; }
+        else if (192 <= IPv4[0] && IPv4[0] <= 223) { Clase = "C"; }
+        else if (224 <= IPv4[0] && IPv4[0] <= 239) { Clase = "D"; }
+        else { Clase = "E"; }
+        
+        //
+        // FIN DE SU CODIGO
+        //
+    
+        return(Clase);
+    }
+
+    //#######PARTE 4########
+    function getRangoIP(IPv4, bitsMascara){
+        var RangoIP = new Array(2);
+        
+        //
+        //AQUI VA SU CODIGO
+        //
+        
+        var ipNumero = parseInt(getIPbase10(IPv4));
+        var mascara = -1 << (32 - bitsMascara);
+        var netIdNumero = ipNumero & mascara;
+        var broadcastNumero = netIdNumero | (~mascara);
+
+        var ipMinNumero = netIdNumero + 1;
+        var ipMaxNumero = broadcastNumero - 1;
+
+        RangoIP[0] = numeroAStringIP(ipMinNumero);
+        RangoIP[1] = numeroAStringIP(ipMaxNumero);
+        
+        
+        //
+        // FIN DE SU CODIGO
+        //
+        
+        return(RangoIP);
+    }
+
+    //#######PARTE 5########
+    function getIPbroadcast(IPv4, bitsMascara){
+        var IPbroadcast;
+        
+        //
+        //AQUI VA SU CODIGO
+        //
+        var ipNumero = parseInt(getIPbase10(IPv4));
+        var mascaraDeRed = -1 << (32 - bitsMascara);
+        var netIdNumero = ipNumero & mascaraDeRed;
+
+        var broadcastNumero = netIdNumero | (~mascaraDeRed);
+
+
+        return numeroAStringIP(broadcastNumero);
+    }
+
+    //
+    //#######PARTE 6########
+    function getMascaraOctal(bitsMascara){
+        var MascaraOctal;
+        
+        //
+        //AQUI VA SU CODIGO
+        //
+        
+        MascaraOctal = numeroAStringIP(-1 << (32 - bitsMascara));
+        
+        
+        //
+        // FIN DE SU CODIGO
+        //
+        
+        return(MascaraOctal);
+    }
+
+    // funcion auxiliar para pasar de numero byte a ip
+    function numeroAStringIP(numero) {
+        var numeroDecimal = [];
+
+        for (var i = 3; i >= 0; i--) {
+            var decimal = (numero >> (i * 8)) & 255;
+            numeroDecimal.push(decimal);
+        }
+
+        return numeroDecimal.join('.');
+    }
+    
+    //Funcion auxiliar. NO MODIFICAR
+    function integrantes(){
+        document.forms[0].integrante1.value = INTEGRANTE1;
+        document.forms[0].integrante2.value = INTEGRANTE2;
+        document.forms[0].integrante3.value = INTEGRANTE3;
+    }
+
+
+    //Agregar metodo rellenarDerecha al objeto String
+    String.prototype.rellenarDerecha = function (relleno, length) {
+        
+        var resultado = new String(this);
+        
+        relleno = relleno.toString().charAt(0); //Tomo en cuenta el primer char
+        
+        if ((this.length < length) && (relleno.toString().length > 0)) {
+            for (var i = 0; i < (length - this.length) ; i++)
+            resultado = resultado.concat(relleno);
+        }
+        
+        return resultado;
+    };
+
+    //Agregar metodo rellenarIzquierda al objeto String
+    String.prototype.rellenarIzquierda = function (relleno, length) {
+        
+        var resultado = new String(this);
+        
+        relleno = relleno.toString().charAt(0); //Tomo en cuenta el primer char
+        
+        if ((this.length < length) && (relleno.toString().length > 0)) {
+            for (var i = 0; i < (length - this.length) ; i++)
+            resultado = relleno + resultado;
+        }
+        
+        return resultado;
+    };
+
+</script>
+</head>
+
+<!-- NO MODIFIQUE EL FORMULARIO !!!!! -->
+
+<body onLoad="integrantes()">
+
+<h1>Redes de Computadores</h1>
+<h2>C&aacute;lculo de Nombre de Red, Rango de IP, Direcci&oacute;n de Broadcast </h2>
+
+
+<form action="#">
+    <b>IP versi&oacute;n 4 : </b> <input name="IPv4" type="text" value="172.16.84.34" onClick="this.select()">
+<br><b>Nro de bits de M&aacute;scara:</b> <input name="bitsMascara" type="text" size="2" maxlength="2" value="18" onClick="this.select()">
+
+<br><input value="Calcular" type="button" onClick="calcular(this.form);">
+
+<hr>
+<b>N&uacute;mero IP (base 10): </b><input name="IPbase10" type="text" size="20" disabled>
+
+<hr>
+<b>Nombre de Red: </b><input name="NetID" type="text" size="15" disabled>
+<hr>
+<b>Clase: </b><input name="Clase" type="text" size="15" disabled>
+<hr>
+<b>Rango de IP disponibles:</b>
+<ul>
+    <li>IP m&iacute;nima<input name="IPmin" type="text" size="15" disabled>
+    <li>IP m&aacute;xima<input name="IPmax" type="text" size="15" disabled>
+</ul>
+<hr>
+<b>Direcci&oacute;n de BroadCast:</b> <input name="IPbroadcast" type="text" size="15" disabled>
+
+<hr>
+<b>M&aacute;scara de Red:</b> <input name="MascaraOctal" type="text" size="15" disabled>
+
+
+<hr>
+<b>Integrantes</b> 
+<br><input name="integrante1" type="text" size="100" disabled> 
+<br><input name="integrante2" type="text" size="100" disabled> 
+
+</form>
+
+</body>
+</html>
